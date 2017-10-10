@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Table with list of X-Formation employees</title>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+
+	<script src="script.js"></script>
+
+	<link rel="stylesheet" href="style.css">
+
+</head>
+<body ng-app="myapp" ng-controller="ListController">
+	<div class="container">
+		<div class="main-page">
+			<header>
+				<h1>X-Formation employees:</h1>
+			</header>
+
+			<!--Tabela z pracownikami-->
+
+			<div class="panel">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>First name</th>
+							<th>Last name</th>
+							<th>Role</th>
+							<th>Experience (in months)</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="data in data" ng-mouseover="showPopover(data.id)" ng-mouseleave="hidePopover()" ng-click="modify(data)">
+							<td ng-class="{selected: editingData[data.id]}">
+								<div ng-hide="editingData[data.id]">{{data.firstName}}</div>
+                        		<div ng-show="editingData[data.id]"><input type="text" ng-model="data.firstName" /></div>
+							</td>
+							<td ng-class="{selected: editingData[data.id]}">
+								<div ng-hide="editingData[data.id]">{{data.lastName}}</div>
+								<div ng-show="editingData[data.id]"><input type="text" ng-model="data.lastName" /></div>
+							</td>
+							<td ng-class="{selected: editingData[data.id]}">
+								<div ng-hide="editingData[data.id]">{{data.role}}</div>
+                        		<div ng-show="editingData[data.id]"><input type="text" ng-model="data.role" /></div>
+							</td>
+							<td ng-class="{selected: editingData[data.id]}" >
+								<div ng-hide="editingData[data.id]" >{{data.experience}}</div>
+                        		<div ng-show="editingData[data.id]"><input type="text" ng-model="data.experience" /></div>
+                        		<div class="popover" ng-show="popId == data.id">
+									{{data.shortDescription}}
+								</div>
+							</td>
+
+
+							<td ng-class="{selected: editingData[data.id]}" ng-show="editingData[data.id]">
+		            			<div ><input type="text" ng-model="data.position" /></div>
+							</td>
+							<td ng-class="{selected: editingData[data.id]}" ng-show="editingData[data.id]">
+		            			<div ><input type="text" ng-model="data.role" /></div>
+							</td>
+							<td ng-class="{selected: editingData[data.id]}" ng-show="editingData[data.id]">
+		            			<div ><input type="text" ng-model="data.role" /></div>
+							</td>
+
+
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
