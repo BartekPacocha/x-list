@@ -1,74 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
+	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Table with list of X-Formation employees</title>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha/css/bootstrap.min.css">
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
 
 	<script src="script.js"></script>
 
 	<link rel="stylesheet" href="style.css">
 
 </head>
-<body ng-app="myapp" ng-controller="ListController">
-	<div class="container">
+<body>
+	<div class="container" ng-app="myapp" ng-controller="ListController">
 		<div class="main-page">
 			<header>
-				<h1>X-Formation employees:</h1>
+				<div class="navbar-brand">
+					<h1 class="navbar-brand mb-0">X-Formation employees:</h1>
+				</div>
 			</header>
 
 			<!--Tabela z pracownikami-->
 
 			<div class="panel">
-				<table class="table">
-					<thead>
+				<div class="panel table-responsive">
+					<table class="table table-hover">
+					<thead class="thead-inverse">
 						<tr>
-							<th>First name</th>
-							<th>Last name</th>
-							<th>Role</th>
-							<th>Experience (in months)</th>
+							<th scope="row" >First name</th>
+							<th scope="row" >Last name</th>
+							<th scope="row" >Role</th>
+							<th scope="row" >Experience (in months)</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="data in data" ng-mouseover="showPopover(data.id)" ng-mouseleave="hidePopover()" ng-click="modify(data)">
-							<td ng-class="{selected: editingData[data.id]}">
-								<div ng-hide="editingData[data.id]">{{data.firstName}}</div>
-                        		<div ng-show="editingData[data.id]"><input type="text" ng-model="data.firstName" /></div>
+						<tr ng-repeat="data in data" class="tableRow" data-toggle="popover" data-target="#myModal" ng-click="onclickRow(data, $index)"  data-trigger="hover" data-content="{{data.shortDescription}}">
+							<td >
+								<div >{{data.firstName}}</div>
 							</td>
-							<td ng-class="{selected: editingData[data.id]}">
-								<div ng-hide="editingData[data.id]">{{data.lastName}}</div>
-								<div ng-show="editingData[data.id]"><input type="text" ng-model="data.lastName" /></div>
+							<td >
+								<div >{{data.lastName}}</div>
 							</td>
-							<td ng-class="{selected: editingData[data.id]}">
-								<div ng-hide="editingData[data.id]">{{data.role}}</div>
-                        		<div ng-show="editingData[data.id]"><input type="text" ng-model="data.role" /></div>
+							<td >
+								<div >{{data.role}}</div>
 							</td>
-							<td ng-class="{selected: editingData[data.id]}" >
-								<div ng-hide="editingData[data.id]" >{{data.experience}}</div>
-                        		<div ng-show="editingData[data.id]"><input type="text" ng-model="data.experience" /></div>
-                        		<div class="popover" ng-show="popId == data.id">
-									{{data.shortDescription}}
-								</div>
+							<td >
+								<div >{{data.experience}}</div>
 							</td>
-
-
-							<td ng-class="{selected: editingData[data.id]}" ng-show="editingData[data.id]">
-		            			<div ><input type="text" ng-model="data.position" /></div>
-							</td>
-							<td ng-class="{selected: editingData[data.id]}" ng-show="editingData[data.id]">
-		            			<div ><input type="text" ng-model="data.role" /></div>
-							</td>
-							<td ng-class="{selected: editingData[data.id]}" ng-show="editingData[data.id]">
-		            			<div ><input type="text" ng-model="data.role" /></div>
-							</td>
-
-
 						</tr>
 					</tbody>
 				</table>
+				</div>
+				
+
+				<!-- Modal -->
+			  <div class="modal fade" id="myModal" role="dialog">
+			    <div class="modal-dialog">
+			    
+			      <!-- Modal content-->
+			      <div class="modal-content">
+			        <div class="modal-header">
+			          <button type="button" class="close" data-dismiss="modal">&times;</button>
+			          <h4 class="navbar-brand mb-0">Edit employee data:</h4>
+			        </div>
+			        <div class="modal-body">
+			          <table class="table table-hover">
+			          	<tr>
+			          		<td>
+			          			First Name:
+			          		</td>
+			          		<td>
+			          			{{editedElement.firstName}}
+			          		</td>
+			          	</tr>
+			          	<tr>
+			          		<td>
+			          			Last Name:
+			          		</td>
+			          		<td>
+			          			{{editedElement.lastName}}
+			          		</td>
+			          	</tr>
+			          	<tr>
+			          		<td>
+			          			Position:
+			          		</td>
+			          		<td>
+			          			{{editedElement.position}}
+			          		</td>
+			          	</tr>
+			          	<tr>
+			          		<td>
+			          			Role:
+			          		</td>
+			          		<td>
+			          			{{editedElement.role}}
+			          		</td>
+			          	</tr>
+			          	<tr>
+			          		<td>
+			          			Experience (in months):
+			          		</td>
+			          		<td>
+			          			<input type="number" class="form-control" value="{{editedElement.experience}}" ng-model="experience">
+			          		</td>
+			          	</tr>
+			          	<tr>
+			          		<td>
+			          			Short Description:
+			          		</td>
+			          		<td>
+			          			<input type="text" class="form-control" ng-model="shortDescription">
+			          			
+			          		</td>
+			          	</tr>
+			          	<tr>
+			          		<td>
+			          			Long Description:
+			          		</td>
+			          		<td>
+			          			<input type="text" class="form-control" ng-model="longDescription">
+			          		</td>
+			          	</tr>
+			          </table>
+			        </div>
+			        <div class="modal-footer">
+			        	<div class="input-group">
+			        		<button type="button" class="btn btn-success" data-dismiss="modal" ng-click="update()">Save</button>
+			        		<button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="delete(editedElement.id)">Delete</button>
+			         		<button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+			        	</div>
+			        </div>
+			      </div>
+			    </div>
+			  </div>
 			</div>
 		</div>
 	</div>
+
+<script>
+$(document).ready(function(){
+	$('[data-toggle=popover]').popover(); //EDIT: added this line to hide popover on button click.
+
+    $('.tableRow').click(function () {
+	     $('#myModal').modal('show');  
+	     $('[data-toggle=popover]').popover('hide'); 
+	});
+});
+</script>
+	
 </body>
 </html>
